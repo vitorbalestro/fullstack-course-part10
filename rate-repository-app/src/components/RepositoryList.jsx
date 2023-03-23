@@ -1,4 +1,4 @@
-import { FlatList, View, StyleSheet, Text } from 'react-native';
+import { FlatList, View, StyleSheet } from 'react-native';
 import Item from './RepositoryItem';
 
 const styles = StyleSheet.create({ 
@@ -6,9 +6,11 @@ const styles = StyleSheet.create({
         height: 10,
     },
     listStyle: {
-        backgroundColor: '#e1e4e8',
-        display: 'flex',
-    }
+        backgroundColor: "#e1e4e8",
+        display: "flex",
+        flexGrow: 1,
+        flexShrink: 1,
+    },
 });
 
 const repositories = [

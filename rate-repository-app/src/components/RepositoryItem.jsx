@@ -89,26 +89,26 @@ const Item = ({ item }) => {
                 />
                 <View style={styles.infoStyle} >
                     <Text fontWeight='bold'>{item.fullName}</Text>
-                    <Text color='textSecondary'>{item.description}</Text>
+                    <Text color="textSecondary">{item.description}</Text>
                     <LanguageDisplay language={item.language}/>
                 </View>
             </View>
             <View style={styles.dataStyle}>
                 <View style={styles.singleDataStyle}>
                     <Text fontWeight='bold'>{parseNumber(item.stargazersCount)}</Text>
-                    <Text color='textSecondary'>Stars</Text>
+                    <Text color="textSecondary">Stars</Text>
                 </View>
                 <View style={styles.singleDataStyle}>
                     <Text fontWeight='bold'>{parseNumber(item.forksCount)}</Text>
-                    <Text color='textSecondary'>Forks</Text>
+                    <Text color="textSecondary">Forks</Text>
                 </View>
                 <View style={styles.singleDataStyle}>
                     <Text fontWeight='bold'>{item.reviewCount}</Text>
-                    <Text color='textSecondary'>Reviews</Text>
+                    <Text color="textSecondary">Reviews</Text>
                 </View>
                 <View style={styles.singleDataStyle}>
                     <Text fontWeight='bold'>{item.ratingAverage}</Text>
-                    <Text color='textSecondary'>Rating</Text>
+                    <Text color="textSecondary">Rating</Text>
                 </View>
             </View>
         </View>
