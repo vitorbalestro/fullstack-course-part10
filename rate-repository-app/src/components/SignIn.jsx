@@ -4,7 +4,9 @@ import { Formik } from 'formik';
 import { View, Pressable } from 'react-native';
 import { string, object } from 'yup';
 import useSignIn from '../hooks/useSignIn';
-import AuthStorage from '../utils/authStorage';
+import { useNavigate } from 'react-router-native';
+import { useContext } from 'react';
+import AuthStorageContext from '../contexts/AuthStorageContext';
 
 const initialValues = {
     username: '',
@@ -39,20 +41,21 @@ const LoginForm = ({ onSubmit }) => {
     ); 
 };
 
-const SignIn = () => {
+const SignIn = ({ setToken }) => {
 
     const [ signIn ] = useSignIn();
-
-    const auth = new AuthStorage("auth");
+    const authStorage = useContext(AuthStorageContext);
+    const navigate = useNavigate();
 
     const onSubmit = async (values) => {
 
         const { username, password } = values;
 
         try {
-            const { data } = await signIn({ username, password });
-            await auth.setAccessToken(data.authenticate.accessToken);
-            console.log(auth.getAccessToken());
+            await signIn({ username, password });
+            setToken(authStorage.getAccessToken());
+            navigate('/reviews');
+            
         } catch(e) {
             console.log(e);
         }

@@ -2,6 +2,8 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import Constants from 'expo-constants';
 import theme from '../theme';
 import AppBarTab from './AppBarTab';
+import SignOutTab from './SignOutTab';
+
 
 const styles = StyleSheet.create({
     container: {
@@ -19,16 +21,36 @@ const styles = StyleSheet.create({
     
 });
 
-const AppBar = () => {
-    const appBarStyles = [ styles.container, styles.appBar ];
+const appBarStyles = [ styles.container, styles.appBar ];
+
+const SignedInAppBar = ({ setToken }) => {
     return (
         <View style={appBarStyles}> 
             <ScrollView  contentContainerStyle={{ gap: 15 }} horizontal>
                 <AppBarTab title="Repositories" route="/" />
-                <AppBarTab title="Sign In" route="/signin"/>
+                <AppBarTab title="My Reviews" route="/reviews" />
+                <SignOutTab setToken={setToken}/>
             </ScrollView>
         </View>
-    );
+    )
+};
+
+const SignedOutAppBar = ({ setToken }) => {
+    return (
+        <View style={appBarStyles}> 
+            <ScrollView  contentContainerStyle={{ gap: 15 }} horizontal>
+                <AppBarTab title="Repositories" route="/"/>
+                <AppBarTab title="Sign In" route="/signin" setToken={setToken}/>
+            </ScrollView>
+        </View>
+    )
+}
+
+const AppBar = ({ token, setToken } ) => {
+
+  
+
+    {return token === '' ? <SignedOutAppBar setToken={setToken} /> : <SignedInAppBar setToken={setToken} />};
 };
 
 export default AppBar;
