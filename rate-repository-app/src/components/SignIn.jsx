@@ -3,6 +3,8 @@ import FormikTextInput from './FormikTextInput';
 import { Formik } from 'formik';
 import { View, Pressable } from 'react-native';
 import { string, object } from 'yup';
+import useSignIn from '../hooks/useSignIn';
+import AuthStorage from '../utils/authStorage';
 
 const initialValues = {
     username: '',
@@ -22,8 +24,6 @@ const styles = {
     }
 }
 
-
-
 const LoginForm = ({ onSubmit }) => {
 
     return(
@@ -36,14 +36,27 @@ const LoginForm = ({ onSubmit }) => {
                 </View>
             </Pressable>
         </View>
-    );
+    ); 
 };
 
 const SignIn = () => {
 
-    const onSubmit = values => {
-        console.log(values.username);
-        console.log(values.password);
+    const [ signIn ] = useSignIn();
+
+    const auth = new AuthStorage("auth");
+
+    const onSubmit = async (values) => {
+
+        const { username, password } = values;
+
+        try {
+            const { data } = await signIn({ username, password });
+            await auth.setAccessToken(data.authenticate.accessToken);
+            console.log(auth.getAccessToken());
+        } catch(e) {
+            console.log(e);
+        }
+        
     }
 
     const validationSchema = object().shape({
