@@ -6,6 +6,12 @@ const styles = StyleSheet.create({
     separator: {
         height: 10,
     },
+    listStyle: {
+        backgroundColor: "#e1e4e8",
+        display: "flex",
+        flexGrow: 1,
+        flexShrink: 1,
+    },
 });
 
 const ItemSeparator = () => <View style={styles.separator} />;
@@ -16,11 +22,9 @@ const ReviewsList = () => {
     reviews.me.reviews.edges.map(edge => edge.node)
     : [];
     
-    console.log(reviewNodes);
-
     return (
         <View>
-            <FlatList
+            <FlatList style={styles.listStyle}
                 data={reviewNodes}
                 ItemSeparatorComponent={ItemSeparator}
                 renderItem={({ item }) => <ReviewItem item={item}/>}
