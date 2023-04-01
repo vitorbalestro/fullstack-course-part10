@@ -98,7 +98,7 @@ const Item = ({ item }) => {
                     />
                     <View style={styles.infoStyle} >
                         <Text fontWeight='bold'>{item.fullName}</Text>
-                        <Text color="textSecondary">{item.description}</Text>
+                        <Text style={{ flexShrink: 1, marginRight: 3 }} color="textSecondary">{item.description}</Text>
                         <LanguageDisplay language={item.language}/>
                     </View>
                 </View>

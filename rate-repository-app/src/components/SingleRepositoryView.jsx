@@ -1,9 +1,10 @@
 import Text from './Text';
-import { View, StyleSheet, Image, Pressable } from 'react-native';
+import { View, StyleSheet, Dimensions, Image, Pressable, FlatList, ScrollView } from 'react-native';
 import { useParams } from 'react-router-native';
 import useSingleRepository from '../hooks/useSingleRepository';
 import * as Linking from 'expo-linking';
-import SingleRepositoryReviews from './SingleRepositoryReviews';
+import SingleReview from './SingleReview';
+
 
 
 function parseNumber( value ) {
@@ -86,7 +87,17 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center'
-    }
+    },
+    listStyle: {
+        backgroundColor: "#e1e4e8",
+        display: "flex",
+        flexGrow: 1,
+        flexShrink: 1,
+        height: 250,
+    },
+    separator: {
+        height: 10,
+    },
 });
 
 const LanguageDisplay = ({ language }) => {
@@ -97,19 +108,35 @@ const LanguageDisplay = ({ language }) => {
     )
 } 
 
+const ItemSeparator = () => <View style={styles.separator} />;
+
+
 
 const DetailedItem = () => {
 
     const { id } = useParams();
 
-    const result = useSingleRepository({id: id});
+    const result = useSingleRepository({ id: id });
 
     const repository = result.data ?
     result.data.repository
     : {};      
 
+    const reviews = result.data ?
+    result.data.repository.reviews.edges.map(edge => edge.node)
+    : [];
+    
+
+    if(reviews.length === 0 || !reviews || reviews === 'undefined') {
+        return (
+            <View><Text>Loading reviews...</Text></View>
+        )
+    }
+
+    const fetchMore = result.fetchMore;
+
     return (
-        <View>
+        <ScrollView style={styles.listStyle}>
             <View style={styles.flexCard}>
                 <View style={styles.headStyle}>
                     <Image
@@ -148,8 +175,21 @@ const DetailedItem = () => {
                     </Pressable>
                 </View>
             </View>
-            <SingleRepositoryReviews />
-        </View>
+            <ItemSeparator />
+            <FlatList 
+                data={reviews}
+                ItemSeparatorComponent={ItemSeparator}
+                renderItem={({ item }) => <SingleReview review={item}/> }
+                keyExtractor={review => review.id}
+                onEndReached={fetchMore}
+                onEndReachedThreshold={0.5}
+            />
+            <View style={{ backgroundColor: "#e1e4e8", 
+            height: reviews.length * 170 < Dimensions.get('window').height 
+            ? Dimensions.get('window').height - reviews.length * 170
+            :20}}> 
+            </View>
+        </ScrollView>
     )
 }
 

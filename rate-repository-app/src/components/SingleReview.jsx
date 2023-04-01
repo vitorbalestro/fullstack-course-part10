@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     separator: {
         height: 10,
     }, 
-    listStyle: {
+    backStyle: {
         backgroundColor: "#e1e4e8",
         display: "flex",
         gap:10
@@ -64,9 +64,7 @@ function parseDate(date) {
 const SingleReview = ({ review }) => {
     
     return( 
-        <View style={styles.listStyle}>
-            <View styles={styles.separator}>
-            </View>
+       
             <View style={styles.flexCard}>
                 <RatingCircle rating={review.rating} />
                 <View sytle={styles.contentStyle}>
@@ -77,7 +75,6 @@ const SingleReview = ({ review }) => {
                     </View>
                 </View>
             </View>
-        </View>
     )
 } 
 

@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
         display: "flex",
         flexGrow: 1,
         flexShrink: 1,
+        height: 250
     },
     menuStyle: {
         elevation: 3,
@@ -98,17 +99,14 @@ const RepositoryList = () => {
 
     const [ value ] = useDebounce(searchQuery, 500);
 
-    const onEndReach = () => {
-        console.log('you reached the end.');
-    }
-
-    const { repositories } = useRepositories({ orderBy: orderBy, 
+    const { repositories, fetchMore } = useRepositories({ orderBy: orderBy, 
         orderDirection: orderDirection, searchKeyword: value });
     
     const repositoryNodes = repositories 
     ? repositories.repositories.edges.map(edge => edge.node)
     : [];
     
+
     return (
         <View style={styles.listStyle}>
             <FlatList
@@ -120,8 +118,8 @@ const RepositoryList = () => {
                 ItemSeparatorComponent={ItemSeparator}
                 renderItem={({ item }) => ( <Item item={item} /> )}
                 keyExtractor={item => item.id}
-                onEndReached={onEndReach}
-                onEndReachedThreshold={0.5}
+                onEndReached={fetchMore}
+                onEndReachedThreshold={0.7}
             />
             <View style={{backgroundColor: "#e1e4e8", 
             height: repositoryNodes.length * 170 < Dimensions.get('window').height 
