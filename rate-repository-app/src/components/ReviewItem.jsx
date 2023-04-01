@@ -1,70 +1,150 @@
-import { View, Image, StyleSheet } from 'react-native';
+import { View, StyleSheet, Pressable, Alert } from 'react-native';
 import Text from './Text';
-import ViewMoreText from 'react-native-view-more-text';
+import { useNavigate } from 'react-router-native';
+import useDeleteReview from '../hooks/useDeleteReview';
 
 const styles = StyleSheet.create({
     flexCard: {
         display: 'flex',
+        flexDirection: 'column',
         backgroundColor: 'white',
-        height: 260,
-        gap: 10
     },
-    headStyle: {
-        paddingTop: 10,
+    headerAndReviewStyle: {
         display: 'flex',
         flexDirection: 'row',
-        gap: 15,
-        justifyContent: 'center',
-        alignContent: 'center'
+        backgroundColor: 'white',
+        gap: 10,
+        paddingLeft: 10,
+        paddingTop: 10,
+        marginBottom: 15
     },
-    infoStyle: {
+    ratingCircle: {
+        display: 'flex',
+        height: 40,
+        width: 40,
+        borderRadius: 20,
+        borderColor: '#1e90ff',
+        borderWidth: 2,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    contentStyle: {
         display: 'flex',
         flexDirection: 'column',
         gap:10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingTop: 5
+        alignItems: 'left',
+        paddingTop: 5,
     },
-    reviewStyle: {
+    separator: {
+        height: 10,
+    }, 
+    listStyle: {
+        backgroundColor: "#e1e4e8",
+        display: "flex",
+        gap:10
+    },
+    buttonsStyle: {
         display: 'flex',
-        flexDirection: 'column',
-        gap: 5,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingLeft: 20,
+        paddingRight: 20,
+       /* height: 50,*/
+    },
+    viewButton: {
+        display: 'flex',
+        height: 40,
+        margin: 10,
+        padding: 10,
+        backgroundColor: '#1e90ff',
+        borderRadius: 7,
         justifyContent: 'center',
-        alignItems: 'center',
-        paddingLeft:10,
-        paddingTop: 20,
+        alignItems: 'center'
     },
-    tinyLogo: {
-        width: 50,
-        height: 50,
-        borderRadius: 5
-    },
+    deleteButton: {
+        display: 'flex',
+        height: 40,
+        margin: 10,
+        padding: 10,
+        backgroundColor: 'red',
+        borderRadius: 7,
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
+    
 })
 
 
-const ReviewItem = ({ item }) => {
-
-  
+const RatingCircle = ({ rating }) => {
     return (
-        <View style={styles.flexCard}>
-            <View style={styles.headStyle}>
-                <Image
-                    style={styles.tinyLogo}
-                    source={item.repository.ownerAvatarUrl}
-                />
-            </View>
-            <View style={styles.infoStyle} >
-                <Text fontWeight='bold'>{item.repository.fullName}</Text>
-                <Text color="textSecondary">{item.repository.description}</Text>
-            </View>        
-            <View style={styles.reviewStyle}>
-                <Text fontWeight='bold'>Review</Text>
-                <Text>
-                    {item.text}
-                </Text>
-            </View>
+        <View style={styles.ratingCircle}>
+            <Text style={{color: '#1e90ff'}}>{rating}</Text>
         </View>
     )
 }
 
-export default ReviewItem;
+function parseDate(date) {
+    
+    const dateBlock = date.split('T')[0];
+    const dateArray = dateBlock.split('-');
+    const year = dateArray[0];
+    const month = dateArray[1];
+    const day = dateArray[2];
+    
+    const outputDate = day + '.' + month + '.' + year;
+    return outputDate;
+}
+
+const SingleReview = ({ review }) => {
+    
+    const navigate = useNavigate();
+    const repositoryUrl = `/repository/${review.repositoryId}`
+    const deleteReview = useDeleteReview({ id: review.id });
+
+    const handleDelete = () => {
+        /*Alert.alert('Delete review', 
+        'Are you sure you want to delete this review?',[
+            {
+                text: 'Cancel',
+                style: 'cancel'
+            },
+            {
+                text: 'Delete',
+                onPress: () => deleteReview()
+            }
+        ])*/
+
+        deleteReview();
+
+    }
+    return( 
+        <View style={styles.listStyle}>
+            <View style={styles.flexCard}>
+                <View style={styles.headerAndReviewStyle}>
+                    <RatingCircle rating={review.rating} />
+                    <View sytle={styles.contentStyle}>
+                        <Text fontWeight='bold'>{review.repository.fullName}</Text>
+                        <Text style = {{ paddingTop: 5}} color='textSecondary'>{parseDate(review.createdAt)}</Text>
+                        <View style={{ flexDirection: 'row', flexShrink: 1, width: 300 }}>
+                            <Text style={{flex: 1, flexWrap: 'wrap', paddingTop:10}}>{review.text}</Text>
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.buttonsStyle}>
+                    <Pressable onPress={() => navigate(repositoryUrl)}>
+                        <View style={styles.viewButton}>
+                            <Text fontWeight='bold' style={{color: 'white'}}>View repository</Text>
+                        </View>
+                    </Pressable>
+                    <Pressable onPress={handleDelete}>
+                        <View style={styles.deleteButton}>
+                            <Text fontWeight='bold' style={{color: 'white'}}>Delete review</Text>
+                        </View>
+                    </Pressable>
+                </View>
+            </View>
+        </View>
+    )
+} 
+
+export default SingleReview;

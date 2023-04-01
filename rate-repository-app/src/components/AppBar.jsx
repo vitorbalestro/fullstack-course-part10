@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     },
     appBar: {
         backgroundColor: theme.colors.appBarBackground,
+        paddingLeft:5
     },
     
 });
@@ -28,6 +29,7 @@ const SignedInAppBar = ({ setToken }) => {
         <View style={appBarStyles}> 
             <ScrollView  contentContainerStyle={{ gap: 15 }} horizontal>
                 <AppBarTab title="Repositories" route="/" />
+                <AppBarTab title="Create a Review" route="/create" />
                 <AppBarTab title="My Reviews" route="/reviews" />
                 <SignOutTab setToken={setToken}/>
             </ScrollView>
@@ -41,16 +43,18 @@ const SignedOutAppBar = ({ setToken }) => {
             <ScrollView  contentContainerStyle={{ gap: 15 }} horizontal>
                 <AppBarTab title="Repositories" route="/"/>
                 <AppBarTab title="Sign In" route="/signin" setToken={setToken}/>
+                <AppBarTab title='Sign Up' route='/signup' />
             </ScrollView>
         </View>
     )
-}
-
-const AppBar = ({ token, setToken } ) => {
-
-  
-
-    {return token === '' ? <SignedOutAppBar setToken={setToken} /> : <SignedInAppBar setToken={setToken} />};
 };
+
+
+const AppBar = ({ token, setToken }) => {
+
+    {return !token || token === 'undefined' || token === "" ? <SignedOutAppBar setToken={setToken} /> : <SignedInAppBar setToken={setToken} />};
+
+};
+
 
 export default AppBar;
